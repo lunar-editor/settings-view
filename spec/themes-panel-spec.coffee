@@ -11,12 +11,12 @@ describe "ThemesPanel", ->
   settingsView = null
 
   beforeEach ->
-    atom.packages.loadPackage('atom-light-ui')
-    atom.packages.loadPackage('atom-dark-ui')
-    atom.packages.loadPackage('atom-light-syntax')
-    atom.packages.loadPackage('atom-dark-syntax')
+    atom.packages.loadPackage('one-light-ui')
+    atom.packages.loadPackage('one-dark-ui')
+    atom.packages.loadPackage('one-light-syntax')
+    atom.packages.loadPackage('one-dark-syntax')
     atom.packages.packageDirPaths.push(path.join(__dirname, 'fixtures'))
-    atom.config.set('core.themes', ['atom-dark-ui', 'atom-dark-syntax'])
+    atom.config.set('core.themes', ['one-dark-ui', 'one-dark-syntax'])
     reloadedHandler = jasmine.createSpy('reloadedHandler')
     atom.themes.onDidChangeActiveThemes(reloadedHandler)
     atom.themes.activatePackages()
@@ -40,40 +40,40 @@ describe "ThemesPanel", ->
       Promise.resolve(atom.themes.deactivateThemes()) # Ensure works on promise and non-promise versions
 
   it "selects the active syntax and UI themes", ->
-    expect(panel.refs.uiMenu.value).toBe 'atom-dark-ui'
-    expect(panel.refs.syntaxMenu.value).toBe 'atom-dark-syntax'
+    expect(panel.refs.uiMenu.value).toBe 'one-dark-ui'
+    expect(panel.refs.syntaxMenu.value).toBe 'one-dark-syntax'
 
   describe "when a UI theme is selected", ->
     it "updates the 'core.themes' config key with the selected UI theme", ->
       for child in panel.refs.uiMenu.children
-        child.selected = child.value is 'atom-light-ui'
+        child.selected = child.value is 'one-light-ui'
         child.dispatchEvent(new Event('change', {bubbles: true}))
       waitsFor ->
         reloadedHandler.callCount is 2
       runs ->
-        expect(atom.config.get('core.themes')).toEqual ['atom-light-ui', 'atom-dark-syntax']
+        expect(atom.config.get('core.themes')).toEqual ['one-light-ui', 'one-dark-syntax']
 
   describe "when a syntax theme is selected", ->
     it "updates the 'core.themes' config key with the selected syntax theme", ->
       for child in panel.refs.syntaxMenu.children
-        child.selected = child.value is 'atom-light-syntax'
+        child.selected = child.value is 'one-light-syntax'
         child.dispatchEvent(new Event('change', {bubbles: true}))
       waitsFor ->
         reloadedHandler.callCount is 2
       runs ->
-        expect(atom.config.get('core.themes')).toEqual ['atom-dark-ui', 'atom-light-syntax']
+        expect(atom.config.get('core.themes')).toEqual ['one-dark-ui', 'one-light-syntax']
 
   describe "when the 'core.config' key changes", ->
     it "refreshes the theme menus", ->
       reloadedHandler.reset()
-      atom.config.set('core.themes', ['atom-light-ui', 'atom-light-syntax'])
+      atom.config.set('core.themes', ['one-light-ui', 'one-light-syntax'])
 
       waitsFor ->
         reloadedHandler.callCount is 1
 
       runs ->
-        expect(panel.refs.uiMenu.value).toBe 'atom-light-ui'
-        expect(panel.refs.syntaxMenu.value).toBe 'atom-light-syntax'
+        expect(panel.refs.uiMenu.value).toBe 'one-light-ui'
+        expect(panel.refs.syntaxMenu.value).toBe 'one-light-syntax'
 
   xdescribe "when the themes panel is navigated to", ->
     xit "focuses the search filter", ->
